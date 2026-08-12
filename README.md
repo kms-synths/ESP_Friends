@@ -14,7 +14,7 @@ I put a lot of work into developing a decent attenuation stage: first, the signa
 
 For activating calibration mode press SEL and Hold at the same time.
 
-**BOM:**
+### BOM:
 
 **Resistors:**
 - 5.1k   x1
