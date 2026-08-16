@@ -26,7 +26,7 @@
     PMO-RP/JSB V3.0
     a.k.a.
     SPIZDILI -- kmsscope v1.0
-    19.07.2026 (because DD/MM/YYYY is superior),
+    19.07.2026 to 16.08.2026 and later (because DD/MM/YYYY is superior),
     - full rework to adapt it to ESP32C3
     - reworked to Eurorack realities, e.g. two modes for DC coupled signals (LFOs, ADSRs, CVs) and two modes for bipolar (preferably AC coupled) signals (basically   any audio signals)
    - software calibration for 146% precise values!1!!11!!
@@ -234,8 +234,10 @@ void writeCommonImage() {     // Show menu.
     // for (int x = BEGIN_X + 2; x <= SCREEN_WIDTH; x += 5) {
     // There are 128 samples that are displayed.
     // So we need a zero line of that same length.
-    for (int x = BEGIN_X + 2; x <= SCREEN_WIDTH - 1 + BEGIN_X + 2; x += 5) {
+    if (!specanalyzer) {
+      for (int x = BEGIN_X + 2; x <= SCREEN_WIDTH - 1 + BEGIN_X + 2; x += 5) {
         oled.drawFastHLine(x, 36, 2, WHITE); // Draw the center line (horizontal line) with a dotted line.
+      }
     }
 #endif
 
@@ -508,8 +510,10 @@ void dispInf() { // Display of menu
     } else {                                         // no!
         dtostrf(voltage, 4, 1, chrBuff);             // format **.*
     }
+    if (!specanalyzer) {
     oled.setCursor(0, 33);
     oled.print(chrBuff); // display the value
+    }
 #endif
 
 #ifdef DISPLAY_MIN
@@ -586,7 +590,7 @@ void plotSpectrum() { // Plot audio-spectrum at the same space, as the scope
 
     for (uint16_t i = 0; i < 128; i++) {
         double mag = vReal[i];
-        double db = 20.0 * log10(mag + 1.0);
+        double db = 30.0 * log10(mag + 1.0);
         long y = map((long)db, 50, 100, 63, 9);
         y = constrain(y, 9, 64);
         oled.drawFastVLine(i, y, 63 - y + 1, WHITE);
@@ -752,7 +756,7 @@ void setup() {
     pinMode(BTN_UP, INPUT_PULLUP);
     pinMode(BTN_DOWN, INPUT_PULLUP);
     pinMode(BTN_HOLD, INPUT_PULLUP);
-    pinMode(PIN_LED, OUTPUT); // Пин светодиода
+    pinMode(PIN_LED, OUTPUT);
 
     attachInterrupt(BTN_SEL, pin2IRQ, FALLING);
     attachInterrupt(BTN_UP, pin2IRQ, FALLING);
